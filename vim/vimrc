@@ -1,6 +1,3 @@
-colorscheme zellner
-set background=dark
-
 set number
 set linebreak
 set ignorecase
@@ -11,7 +8,11 @@ set expandtab
 set tabstop=2
 set shiftwidth=2
 
-set guioptions-=T
+if has('gui_running')
+  colorscheme github
+else
+  colorscheme ir_black
+endif
 
 " for command mode
 nmap <S-Tab> <<
