@@ -1,6 +1,8 @@
 [user]
   name = Guilherme Taschetto
   email = gtaschetto@gmail.com
+[credential]
+helper = cache --timeout=3600  
 [color]
 	ui = auto
 [color "branch"]
