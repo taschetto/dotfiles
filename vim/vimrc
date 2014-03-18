@@ -1,0 +1,20 @@
+colorscheme zellner
+set background=dark
+
+set number
+set linebreak
+set ignorecase
+set smartcase
+
+set smartindent
+set expandtab
+set tabstop=2
+set shiftwidth=2
+
+set guioptions-=T
+
+" for command mode
+nmap <S-Tab> <<
+" for insert mode
+imap <S-Tab> <Esc><<i
+
