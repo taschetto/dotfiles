@@ -19,3 +19,8 @@ nmap <S-Tab> <<
 " for insert mode
 imap <S-Tab> <Esc><<i
 
+" .flex & .jflex syntax
+augroup filetype
+ au BufRead,BufNewFile *.flex,*.jflex    set filetype=jflex
+augroup END
+au Syntax jflex so ~/.vim/syntax/jflex.vim
