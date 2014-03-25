@@ -43,6 +43,7 @@ case "$TERM" in
     xterm-color) color_prompt=yes;;
 esac
 
+
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
@@ -59,59 +60,78 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-function parse_git_branch {
-    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1) /'
-}
- 
-function git_unadded_new {
-    if git rev-parse --is-inside-work-tree &> /dev/null
-    then
-        if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]]
-        then
-            echo ""
-        else
-            echo "+"
-        fi
-    fi
-}
- 
-function git_needs_commit {
-    if [[ "git rev-parse --is-inside-work-tree &> /dev/null)" != 'true' ]] && git rev-parse --quiet --verify HEAD &> /dev/null
-    then
-        git diff-index --cached --quiet --ignore-submodules HEAD 2> /dev/null
-        (( $? && $? != 128 )) && echo "@"
-    fi
-}
- 
-function git_modified_files {
-    if [[ "git rev-parse --is-inside-work-tree &> /dev/null)" != 'true' ]] && git rev-parse --quiet --verify HEAD &> /dev/null
-    then
-        git diff --no-ext-diff --ignore-submodules --quiet --exit-code || echo "m"
-    fi
-}
- 
 function short_pwd {
-    echo $PWD | sed "s:${HOME}:~:" | sed "s:/\(.\)[^/]*:/\1:g" | sed "s:/[^/]*$:/$(basename $PWD):"
+  echo $PWD | sed "s:${HOME}:~:" | sed "s:/\(.\)[^/]*:/\1:g" | sed "s:/[^/]*$:/$(basename $PWD):"
 }
- 
-if [ `id -u` = 0 ]; then
-    COLOUR="04;01;31m"
-    PATH_COLOUR="01;31m"
-else
-    COLOUR="01;32m"
-    PATH_COLOUR="01;31m"
-fi
- 
-BOLD_RED="01;31m"
-BOLD_GREEN="01;32m"
-BOLD_BLUE="01;36m"
+
+GREEN="\[\033[1;32m\]"
+RED="\[\033[1;31m\]"
+BLUE="\[\033[1;34m\]"
+YELLOW="\[\033[1;33m\]"
+WHITE="\[\033[m\]"
+
+function git_unadded_new {
+  if git rev-parse --is-inside-work-tree &> /dev/null
+  then
+    if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]]
+    then
+      echo ""
+    else
+      echo "$GREEN+"
+    fi
+  fi
+}
+
+function git_modified_files {
+  if [[ "git rev-parse --is-inside-work-tree &> /dev/null)" != 'true' ]] && git rev-parse --quiet --verify HEAD &> /dev/null
+  then
+    git diff --no-ext-diff --ignore-submodules --quiet --exit-code || echo "$YELLOWm"
+  fi
+}
+
+function git_needs_commit {
+  if [[ "git rev-parse --is-inside-work-tree &> /dev/null)" != 'true' ]] && git rev-parse --quiet --verify HEAD &> /dev/null
+  then
+    git diff-index --cached --quiet --ignore-submodules HEAD 2> /dev/null
+    (( $? && $? != 128 )) && echo "$RED!"
+  fi
+}
+
+function make_git {
+  g='$(__git_ps1 %s)'
+  if [ "$g" != "" ]; then
+    gitflags="$(git_unadded_new)$(git_modified_files)$(git_needs_commit)"
+    if [ "$gitflags" != "" ]; then
+      echo " $BLUE($g $gitflags$BLUE)"
+    else
+      echo " $BLUE($g)"
+    fi
+  else
+    echo ""
+  fi
+}
+
+#Prompt and prompt colors
+# 30m - Black
+# 31m - Red
+# 32m - Green
+# 33m - Yellow
+# 34m - Blue
+# 35m - Purple
+# 36m - Cyan
+# 37m - White
+# 0 - Normal
+# 1 - Bold
+function prompt {
+  local GIT=$(make_git)
+  export PS1="$GREEN\u@\h $RED\W$BLUE$GIT $BLUE\$ $WHITE"
+  #      PS1='\[\033[1;32m\]\u@\h \[\033[31m\]  \W\[\033[34m\]  $(__git_ps1 " (%s) ")\[\033[1;34m\]\$ \[\033[m\]'
+}
 
 if [ "$color_prompt" = yes ]; then
-  PS1='\[\033[1;32m\]\u@\h \[\033[31m\]\W\[\033[34m\]$(__git_ps1 " (%s)")\[\033[1;34m\] $\[\033[m\] '
-	#PS1='${debian_chroot:+($debian_chroot)}\[\033[$COLOUR\]\u@\h\[\033[00m\] \[\033[01;$PATH_COLOUR\]$(short_pwd)\[\033[00m\]\[\033[01;34m\]$(__git_ps1 " (%s ")\[\033[00m\]\[\033[$BOLD_RED\]$(git_unadded_new)\[\033[00m\]\[\033[$BOLD_GREEN\]$(git_needs_commit)\[\033[00m\]\[\033[$BOLD_GREEN\]$(git_modified_files))\[\033[00m\] \[\033[01;34m\]\$ \[\033[01;31m\]'
-else
-  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+  prompt
 fi
+
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
