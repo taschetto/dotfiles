@@ -77,15 +77,22 @@ function git_unadded_new {
     then
       echo ""
     else
-      echo "$GREEN+"
+      echo " +"
     fi
   fi
 }
 
-function git_modified_files {
-  if [[ "git rev-parse --is-inside-work-tree &> /dev/null)" != 'true' ]] && git rev-parse --quiet --verify HEAD &> /dev/null
+function git_unstaged_changes()
+{
+  if git rev-parse --is-inside-work-tree &> /dev/null
   then
-    git diff --no-ext-diff --ignore-submodules --quiet --exit-code || echo "$YELLOWm"
+    git diff --exit-code --quiet
+    if [[ $? -eq 1 ]]
+    then
+      echo " @"
+    else
+      echo ""
+    fi
   fi
 }
 
@@ -93,19 +100,16 @@ function git_needs_commit {
   if [[ "git rev-parse --is-inside-work-tree &> /dev/null)" != 'true' ]] && git rev-parse --quiet --verify HEAD &> /dev/null
   then
     git diff-index --cached --quiet --ignore-submodules HEAD 2> /dev/null
-    (( $? && $? != 128 )) && echo "$RED!"
+    (( $? && $? != 128 )) && echo " !"
   fi
 }
 
 function make_git {
-  local g='$(__git_ps1 %s)'
-  if [ ! -z "$g" ]; then
-    local gitflags="$(git_unadded_new)$(git_modified_files)$(git_needs_commit)"
-    if [[ $gitflags ]]; then
-      gitflags="[$gitflags]"
-    fi
-    echo " $YELLOW($g$gitflags$YELLOW)";
-  fi
+  #if git rev-parse --is-inside-work-tree &> /dev/null
+    local g='$(__git_ps1 %s)'
+    local gitflags='$(git_unstaged_changes)$(git_unadded_new)$(git_needs_commit)'
+    echo " $YELLOW$g$gitflags$YELLOW";
+  #fi
 }
 
 #Prompt and prompt colors
@@ -120,7 +124,7 @@ function make_git {
 # 0 - Normal
 # 1 - Bold
 function prompt {
-  export PS1="$GREEN\u@\h $BLUE\W$(make_git) $BLUE\$ $WHITE"
+  export PS1="$GREEN\u@\h $BLUE\W$(make_git)$BLUE\$ $WHITE"
   #      PS1='\[\033[1;32m\]\u@\h \[\033[31m\]  \W\[\033[34m\]  $(__git_ps1 " (%s) ")\[\033[1;34m\]\$ \[\033[m\]'
 }
 
