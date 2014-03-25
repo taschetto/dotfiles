@@ -15,9 +15,9 @@
 	old = red bold
 	new = green bold
 [color "status"]
-	added = yellow
+	added = red
 	changed = green
-	untracked = cyan
+	untracked = blue
 [alias]
 	st = status
 	ci = commit
