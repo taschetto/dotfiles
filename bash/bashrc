@@ -98,9 +98,10 @@ function git_needs_commit {
 }
 
 function make_git {
-  g='$(__git_ps1 %s)'
-  if [ "$g" != "" ]; then
-    gitflags="$(git_unadded_new)$(git_modified_files)$(git_needs_commit)"
+  local g='$(__git_ps1 %s)'
+  local x="$g" | tr -d ' '
+  if [ "$x" != "" ]; then
+    local gitflags="$(git_unadded_new)$(git_modified_files)$(git_needs_commit)"
     if [ "$gitflags" != "" ]; then
       echo " $BLUE($g $gitflags$BLUE)"
     else
@@ -124,7 +125,7 @@ function make_git {
 # 1 - Bold
 function prompt {
   local GIT=$(make_git)
-  export PS1="$GREEN\u@\h $RED\W$BLUE$GIT $BLUE\$ $WHITE"
+  export PS1="$GREEN\u@\h $RED\W$BLUE$(make_git) $BLUE\$ $WHITE"
   #      PS1='\[\033[1;32m\]\u@\h \[\033[31m\]  \W\[\033[34m\]  $(__git_ps1 " (%s) ")\[\033[1;34m\]\$ \[\033[m\]'
 }
 
