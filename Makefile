@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 install: install-vim install-bash install-git
 
 install-vim:
@@ -10,6 +12,7 @@ install-bash:
 	rm -f ~/.bash_profile
 	ln -s `pwd`/bash/bashrc ~/.bashrc
 	ln -s `pwd`/bash/bash_profile ~/.bash_profile
+	source ~/.bashrc
 
 install-git:
 	rm -f ~/.gitconfig
