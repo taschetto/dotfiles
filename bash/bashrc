@@ -60,10 +60,6 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-function short_pwd {
-  echo $PWD | sed "s:${HOME}:~:" | sed "s:/\(.\)[^/]*:/\1:g" | sed "s:/[^/]*$:/$(basename $PWD):"
-}
-
 RED="\033[1;31m"
 GREEN="\033[1;32m"
 YELLOW="\033[1;33m"
@@ -97,10 +93,10 @@ function git_branch
 }
 
 function prompt {
-  export PS1="\[$OCHRE\]\u@\h \[$BLUE\]\W" # \W
+  export PS1="\[$GREEN\]\u@\h \[$BLUE\]\W" # \W
   export PS1="$PS1\[\$(git_color)\]"
   export PS1="$PS1\$(git_branch)"
-  export PS1="$PS1 \[$OCHRE\]\$ $RESET"
+  export PS1="$PS1 \[$BLUE\]\$ $RESET"
 }
 
 if [ "$color_prompt" = yes ]; then
