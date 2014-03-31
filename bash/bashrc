@@ -96,7 +96,7 @@ function prompt {
   export PS1="\[$GREEN\]\u@\h \[$BLUE\]\W" # \W
   export PS1="$PS1\[\$(git_color)\]"
   export PS1="$PS1\$(git_branch)"
-  export PS1="$PS1 \[$BLUE\]\$ $RESET"
+  export PS1="$PS1 \[$BLUE\]\$ \[$RESET\]"
 }
 
 if [ "$color_prompt" = yes ]; then
