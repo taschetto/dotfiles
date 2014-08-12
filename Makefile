@@ -8,11 +8,11 @@ install-vim:
 	ln -s ~/.vim/vimrc ~/.vimrc
 
 install-bash:
-	rm -f ~/.bashrc
-	rm -f ~/.bash_profile
+	mv ~/.bashrc ~/.bashrc.old
+	mv ~/.bash_profile ~/.bash_profile.old
 	ln -s `pwd`/bash/bashrc ~/.bashrc
 	ln -s `pwd`/bash/bash_profile ~/.bash_profile
-	source ~/.bashrc
+	source ~/.bash_profile
 
 install-git:
 	rm -f ~/.gitconfig

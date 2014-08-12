@@ -7,8 +7,8 @@ export TERM=xterm-256color
 
 # If not running interactively, don't do anything
 case $- in
-    *i*) ;;
-      *) return;;
+  *i*) ;;
+    *) return;;
 esac
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -35,14 +35,13 @@ shopt -s checkwinsize
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
+  debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color) color_prompt=yes;;
+  xterm-color) color_prompt=yes;;
 esac
-
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
@@ -50,14 +49,14 @@ esac
 force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
+  if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+  	# We have color support; assume it's compliant with Ecma-48
+  	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+  	# a case would tend to support setf rather than setaf.)
+	  color_prompt=yes
+  else
+	  color_prompt=
+  fi
 fi
 
 RED="\033[1;31m"
@@ -67,40 +66,49 @@ BLUE="\033[1;34m"
 OCHRE="\033[38;5;95m"
 RESET="\033[m"
 
-function git_color {
-  local git_status="$(git status 2> /dev/null)"
+function we_are_in_git_work_tree {
+  git rev-parse --is-inside-work-tree &> /dev/null
+}
 
-  if [[ ! $git_status =~ "working directory clean" ]]; then
-    echo -e $RED
-  else if [[ $git_status =~ "Your branch is ahead of" ]]; then
-    echo -e $YELLOW
-  else if [[ $git_status =~ "nothing to commit" ]]; then
-    echo -e $GREEN
+function git_color {
+  if we_are_in_git_work_tree ; then
+    local git_status="$(git status 2> /dev/null)"
+    if [[ ! $git_status =~ "working directory clean" ]]; then
+      echo -e $RED
+    else if [[ $git_status =~ "Your branch is ahead of" ]]; then
+      echo -e $YELLOW
+    else if [[ $git_status =~ "nothing to commit" ]]; then
+      echo -e $GREEN
+    else
+      echo -e $OCHRE
+    fi fi fi
   else
     echo -e $OCHRE
-  fi fi fi
+  fi
 }
 
 function git_branch
 {
-  local git_status="$(git status 2> /dev/null)"
-  local pattern="^# On branch ([^${IFS}]*)"
-
-  if [[ $git_status =~ $pattern ]]; then
-    local branch=${BASH_REMATCH[1]}
-    echo " ($branch)"
+  if we_are_in_git_work_tree; then
+    local BR=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD 2> /dev/null)
+    if [ "$BR" == HEAD ]; then
+      local NM=$(git name-rev --name-only HEAD 2> /dev/null)
+      if [ "$NM" != undefined ]; then
+        echo -n " (@$NM)"
+      else
+        git rev-parse --short HEAD 2> /dev/null
+      fi
+    else
+      echo -n " ($BR)"
+    fi
   fi
 }
 
-function prompt {
+if [ "$color_prompt" = yes ]; then
   export PS1="\[$GREEN\]\u@\h \[$BLUE\]\W" # \W
   export PS1="$PS1\[\$(git_color)\]"
   export PS1="$PS1\$(git_branch)"
   export PS1="$PS1 \[$BLUE\]\$ \[$RESET\]"
-}
-
-if [ "$color_prompt" = yes ]; then
-  prompt
 fi
 
 unset color_prompt force_color_prompt
@@ -118,9 +126,6 @@ esac
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
@@ -155,4 +160,13 @@ if ! shopt -oq posix; then
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
   fi
+fi
+
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+if [ -d "$HOME/.rbenv/bin" ] ; then
+  PATH="$HOME/.rbenv/bin:$PATH"
+  hash rbenv init - 2>/dev/null
 fi
