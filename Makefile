@@ -8,8 +8,8 @@ install-vim:
 	ln -s ~/.vim/vimrc ~/.vimrc
 
 install-bash:
-	mv ~/.bashrc ~/.bashrc.old
-	mv ~/.bash_profile ~/.bash_profile.old
+	if [ -a ~/.bashrc ]; then mv ~/.bashrc ~/.bashrc.old; fi;
+	if [ -a ~/.bash_profile ]; then	mv ~/.bash_profile ~/.bash_profile.old; fi;
 	ln -s `pwd`/bash/bashrc ~/.bashrc
 	ln -s `pwd`/bash/bash_profile ~/.bash_profile
 	source ~/.bash_profile
