@@ -11,8 +11,10 @@ install-git:
 install-bash:
 	if [ -a ~/.bashrc ]; then mv ~/.bashrc ~/.bashrc.old; fi;
 	if [ -a ~/.bash_profile ]; then	mv ~/.bash_profile ~/.bash_profile.old; fi;
+	if [ -a ~/.bash_aliases ]; then	mv ~/.bash_aliases ~/.bash_aliases.old; fi;
 	ln -s `pwd`/bash/bashrc ~/.bashrc
 	ln -s `pwd`/bash/bash_profile ~/.bash_profile
+	ln -s `pwd`/bash/bash_aliases ~/.bash_aliases
 	source ~/.bash_profile
 
 install-vim:

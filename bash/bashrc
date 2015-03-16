@@ -171,3 +171,6 @@ if [ -d "$HOME/.rbenv/bin" ] ; then
   PATH="$HOME/.rbenv/bin:$PATH"
   eval "$(rbenv init -)"
 fi
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
