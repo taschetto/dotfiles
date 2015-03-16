@@ -1,1 +1,3 @@
 g=git
+rs=rails server
+rc=rails console
