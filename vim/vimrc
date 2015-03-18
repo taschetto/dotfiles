@@ -6,8 +6,9 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
-Plugin 'Valloric/YouCompleteMe'
 Plugin 'drmikehenry/vim-fontdetect'
+Plugin 'bling/vim-airline'
+Plugin 'scrooloose/nerdtree'
 
 call vundle#end()
 filetype plugin indent on
@@ -35,6 +36,7 @@ syntax enable
 colorscheme dracula
 
 " Custom Mappings
+map <C-n> :NERDTreeToggle<CR>
 
 " Shift+Tab for command move
 nmap <S-Tab> <<

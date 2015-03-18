@@ -21,4 +21,4 @@ install-vim:
 	rm -rf ~/.vim ~/.vimrc
 	ln -s `pwd`/vim ~/.vim
 	ln -s ~/.vim/vimrc ~/.vimrc
-	vim -e -c ":BundleInstall! " -c ":qall! "
+	vim -e -c ":PluginInstall! " -c ":qall!"
