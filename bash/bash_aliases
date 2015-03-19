@@ -1,3 +1,2 @@
-g=git
-rs=rails server
-rc=rails console
+alias g='git'
+alias r='rails'

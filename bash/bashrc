@@ -163,6 +163,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# add existing folders to PATH
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
@@ -171,6 +172,9 @@ if [ -d "$HOME/.rbenv/bin" ] ; then
   PATH="$HOME/.rbenv/bin:$PATH"
   eval "$(rbenv init -)"
 fi
+
+source /usr/share/bash-completion/completions/git
+complete -o default -o nospace -F _git g
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
