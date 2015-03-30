@@ -168,6 +168,10 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
+if [ -d "/opt/cmake/bin" ] ; then
+    PATH="/opt/cmake/bin:$PATH"
+fi
+
 if [ -d "$HOME/.rbenv/bin" ] ; then
   PATH="$HOME/.rbenv/bin:$PATH"
   eval "$(rbenv init -)"
