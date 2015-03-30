@@ -20,6 +20,8 @@ bash:
 zsh:
 	if [ -a ~/.zshrc ]; then mv ~/.zshrc ~/.zshrc.old; fi;
 	ln -s `pwd`/zsh/zshrc ~/.zshrc
+	if [ -a ~/.oh-my-zsh/themes/illizian.zsh-theme ]; then mv ~/.oh-my-zsh/themes/illizian.zsh-theme ~/.oh-my-zsh/themes/illizian.zsh-theme.old; fi;
+	ln -s `pwd`/zsh/themes/illizian.zsh-theme ~/.oh-my-zsh/themes/illizian.zsh-theme
 	source ~/.zshrc
 
 vim:

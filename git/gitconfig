@@ -2,7 +2,11 @@
 	name = Guilherme Taschetto
 	email = gtaschetto@gmail.com
 [credential]
-	helper = cache --timeout=3600  
+	helper = cache --timeout=3600
+[diff]
+  tool = meld
+[merge]
+  tool = meld
 [color]
   diff = auto
   status = auto
@@ -33,4 +37,4 @@
 	br = branch
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 [push]
-  default = simple 
+  default = simple
