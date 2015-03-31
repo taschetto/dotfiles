@@ -15,7 +15,7 @@
 ############################
 
 # Icons
-FA_I_GIT=""
+FA_I_GIT=" "
 FA_I_UNSTAGED=""
 FA_I_STAGED=""
 
@@ -26,7 +26,7 @@ FA_I_DSCD=""
 FA_I_HOME=""
 FA_I_ACTV=""
 FA_I_FAIL=""
-FA_I_ROOT=""
+FA_I_ROOT="" # 
 FA_I_NODE=""
 FA_I_GRPH=""
 FA_I_SPED=""
@@ -34,6 +34,10 @@ FA_I_SPED=""
 FA_I_OTBD=""
 FA_I_INBD=""
 FA_I_CAL=""
+
+ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE="↓"
+ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE="↑"
+ZSH_THEME_GIT_PROMPT_DIVERGED_REMOTE="⇅"
 
 # Formatting
 TXT_BOLD="\e[1m"
@@ -44,7 +48,7 @@ TXT_UNBOLD="\e[21m"
 ############################
 
 CURRENT_BG='NONE'
-SEGMENT_SEPARATOR=''
+SEGMENT_SEPARATOR='' # 
 
 prompt_break() {
   echo -n "\n"
@@ -73,16 +77,8 @@ key_val() {
 # Functions                #
 ############################
 
-prompt_user() {
-  prompt_segment blue black "%n"
-}
-
 prompt_status() {
-  # Status:
-  # - was there an error
-  # - are there background jobs?
-  [[ $RETVAL -ne 0 ]] && prompt_segment yellow black "$FA_I_FAIL"
-  [[ $(jobs -l | wc -l) -gt 0 ]] && prompt_segment yellow black "$FA_I_ACTV"
+  prompt_segment black red "%(1?;$FA_I_FAIL ;)"
 }
 
 prompt_time() {
@@ -137,9 +133,9 @@ prompt_git() {
     dirty=$(parse_git_dirty)
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
     if [[ -n $dirty ]]; then
-      prompt_segment yellow black
+      prompt_segment black red
     else
-      prompt_segment green black
+      prompt_segment black cyan
     fi
 
     setopt promptsubst
@@ -153,8 +149,20 @@ prompt_git() {
     zstyle ':vcs_info:*' formats ' %u%c'
     zstyle ':vcs_info:*' actionformats ' %u%c'
     vcs_info
-    echo -n "${ref/refs\/heads\//$FA_I_GIT }${vcs_info_msg_0_%% }"
+    echo -n "${ref/refs\/heads\//$FA_I_GIT }${vcs_info_msg_0_%% } "
     # key_val ${ref/refs\/heads\//$FA_I_GIT } ${vcs_info_msg_0_%% }
+
+    gstatus=$(git_remote_status)
+    if [[ "$gstatus" == "$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE" ]]; then
+      prompt_segment black red
+    else
+      if [[ "$gstatus" == "$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE" ]]; then
+        prompt_segment black green
+      else
+        prompt_segment black yellow
+      fi
+    fi
+    echo -n "%B$gstatus%b"
   fi
 }
 
@@ -163,9 +171,11 @@ prompt_context() {
   local user=`whoami`
 
   if [[ $UID -eq 0 ]]; then
-    echo -n "$FA_I_ROOT $user"
+    prompt_segment black yellow
+    echo -n "$FA_I_ROOT $user@%m"
   elif [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    echo -n "$user@%m "
+    prompt_segment black magenta
+    echo -n "$user@%m"
   fi
 }
 
@@ -199,9 +209,10 @@ build_prompt() {
   fi
 }
 build_lrg_prompt() {
+  #prompt_user
   prompt_status
+  prompt_context
   prompt_dir
-  prompt_user
   #prompt_stats 1 5 10
   #prompt_time
   #prompt_ip
@@ -213,17 +224,7 @@ build_lrg_prompt() {
 }
 
 build_sml_prompt() {
-  prompt_status
-  # prompt_time
-  prompt_dir
-  prompt_user
-  #prompt_stats 1 #5 10
-  #prompt_ip
-  # prompt_nodeversion
-  prompt_git
-  prompt_end
-  prompt_break
-  prompt_cmd
+  build_lrg_prompt
 }
 
 PROMPT='$(build_prompt)'
