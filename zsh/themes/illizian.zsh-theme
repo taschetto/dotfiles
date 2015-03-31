@@ -61,9 +61,9 @@ prompt_segment() {
   [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
   [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
   if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
-    echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
+    echo -n "%{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%}"
   else
-    echo -n "%{$bg%}%{$fg%} "
+    echo -n "%{$bg%}%{$fg%}"
   fi
   CURRENT_BG=$1
   [[ -n $3 ]] && echo -n $3
@@ -78,7 +78,7 @@ key_val() {
 ############################
 
 prompt_status() {
-  prompt_segment black red "%(1?;$FA_I_FAIL ;)"
+  prompt_segment black red "%(1?; $FA_I_FAIL  ;)"
 }
 
 prompt_time() {
@@ -87,7 +87,7 @@ prompt_time() {
 
 # Dir: current working directory
 prompt_dir() {
-  prompt_segment black white "${PWD/#$HOME/$FA_I_HOME }% "
+  prompt_segment black white " ${PWD/#$HOME/$FA_I_HOME }%  "
 }
 
 prompt_ip() {
