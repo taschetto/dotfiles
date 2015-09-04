@@ -23,7 +23,7 @@ ZSH_THEME="taschetto"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
@@ -74,12 +74,8 @@ export SSH_KEY_PATH="~/.ssh/dsa_id"
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+alias open="xdg-open"
 
-export EDITOR=vim
 export TERM=xterm-256color
 
 if [ -d "/opt/cmake/bin" ] ; then
@@ -93,3 +89,6 @@ fi
 
 # Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+
+# Open new tab in current directory
+[[ -f /etc/profile.d/vte.sh ]] && . /etc/profile.d/vte.sh
