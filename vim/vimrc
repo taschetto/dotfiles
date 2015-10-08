@@ -27,6 +27,8 @@ set backspace=indent,eol,start
 set linebreak
 set ignorecase
 set smartcase
+set list
+set listchars=trail:·,precedes:«,extends:»,eol:↲,tab:▸\
 
 " Indentation
 set smartindent

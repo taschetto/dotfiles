@@ -2,7 +2,7 @@
 	name = Guilherme Taschetto
 	email = gtaschetto@gmail.com
 [credential]
-	helper = cache --timeout=3600
+	helper = cache --timeout=86400
 [diff]
   tool = meld
 [merge]
