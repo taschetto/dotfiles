@@ -1,24 +1,7 @@
 set nocompatible
-filetype off
+filetype plugin on
 
-" Vundle --------------------
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-Plugin 'gmarik/Vundle.vim'
-Plugin 'drmikehenry/vim-fontdetect'
-Plugin 'bling/vim-airline'
-Plugin 'scrooloose/nerdtree'
-Plugin 'kien/ctrlp.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-endwise'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-bundle'
-
-call vundle#end()
-filetype plugin indent on
-
-" Basic Options --------------------
+" Basic Options
 set number
 set showmode
 set showcmd
@@ -42,22 +25,10 @@ set clipboard=unnamedplus
 syntax enable
 colorscheme dracula
 
-" NERDTree 
-map <C-n> :NERDTreeToggle<CR>
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-
 " Shift+Tab for command move
 nmap <S-Tab> <<
 " Shift+Tab for insert mode
 imap <S-Tab> <Esc><<i
-
-" .flex & .jflex syntax
-augroup filetype
- au BufRead,BufNewFile *.flex,*.jflex    set filetype=jflex
-augroup END
-au Syntax jflex so ~/.vim/syntax/jflex.vim
 
 " gvim Settings
 if has('gui_running')
@@ -70,8 +41,3 @@ if has('gui_running')
   set go-=r
   set go-=R
 endif
-
-" vim-airline settings
-set laststatus=2
-
-let g:airline_powerline_fonts = 1

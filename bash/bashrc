@@ -182,3 +182,7 @@ complete -o default -o nospace -F _git g
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+export STARWEB_USER="admin"
+export STARWEB_PASSWORD="star$TK#web"
+export WINEDEBUG=fixme-all
+export WINEDEBUG=fixme-all
