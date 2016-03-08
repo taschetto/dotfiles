@@ -87,7 +87,7 @@ prompt_time() {
 
 # Dir: current working directory
 prompt_dir() {
-  prompt_segment black white " ${PWD/#$HOME/$FA_I_HOME }%  "
+  prompt_segment black white " ${PWD/#$HOME/$FA_I_HOME }% "
 }
 
 prompt_ip() {
@@ -135,7 +135,7 @@ prompt_git() {
     if [[ -n $dirty ]]; then
       prompt_segment black red
     else
-      prompt_segment black cyan
+      prompt_segment black green
     fi
 
     setopt promptsubst
@@ -149,7 +149,7 @@ prompt_git() {
     zstyle ':vcs_info:*' formats ' %u%c'
     zstyle ':vcs_info:*' actionformats ' %u%c'
     vcs_info
-    echo -n "${ref/refs\/heads\//$FA_I_GIT }${vcs_info_msg_0_%% } "
+    echo -n " ${ref/refs\/heads\//$FA_I_GIT }${vcs_info_msg_0_%% } "
     # key_val ${ref/refs\/heads\//$FA_I_GIT } ${vcs_info_msg_0_%% }
 
     gstatus=$(git_remote_status)

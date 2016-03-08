@@ -93,4 +93,4 @@ export PATH="/usr/local/heroku/bin:$PATH"
 # Open new tab in current directory
 [[ -f /etc/profile.d/vte.sh ]] && . /etc/profile.d/vte.sh
 
-alias tkesubl='STARWEB_USER=admin && STARWEB_PASSWORD=star\$TK#web subl ~/projects/TKE/tke.sublime-project'
+alias progress='STARWEB_USER=admin && STARWEB_PASSWORD=star\$TK#web subl ~/projects/TKE/tke.sublime-project'
