@@ -135,7 +135,12 @@ prompt_git() {
     if [[ -n $dirty ]]; then
       prompt_segment black red
     else
-      prompt_segment black green
+      gstatus=$(git_remote_status)
+      if [[ "$gstatus" == "" ]]; then
+        prompt_segment black green
+      else
+        prompt_segment black yellow
+      fi
     fi
 
     setopt promptsubst
