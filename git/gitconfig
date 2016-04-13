@@ -6,7 +6,9 @@
 [diff]
   tool = meld
 [merge]
-  tool = meld
+  tool = mymeld
+[mergetool "mymeld"]
+  cmd = meld "$LOCAL" "$MERGED" "$REMOTE"
 [color]
   diff = auto
   status = auto
