@@ -45,12 +45,11 @@ HIST_STAMPS="dd/mm/yyyy"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(bundler common-aliases git github rails rake-fast sublime)
+plugins=(bundler common-aliases git github rails rake-fast sublime sudo)
 
 # User configuration
 
 export PATH=$HOME/bin:/usr/local/bin:$PATH
-# export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -58,11 +57,7 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='vim'
-fi
+export EDITOR='vim'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -92,5 +87,3 @@ export PATH="/usr/local/heroku/bin:$PATH"
 
 # Open new tab in current directory
 [[ -f /etc/profile.d/vte.sh ]] && . /etc/profile.d/vte.sh
-
-alias progress='STARWEB_USER=admin && STARWEB_PASSWORD=star\$TK#web subl ~/projects/TKE/tke.sublime-project'

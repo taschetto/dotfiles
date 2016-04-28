@@ -1,235 +1,93 @@
-#!/usr/bin/env zsh
-##############################################################################
-#                                                                            #
-# illizian's zsh theme                                                       #
-# A Powerline, agnoster & amuse inspired theme for ZSH                       #
-#                                                                            #
-# Dependencies                                                               #
-# * Powerline-patched font (https://github.com/Lokaltog/powerline-fonts)     #
-# * fonts-font-awesome package                                               #
-#                                                                            #
-##############################################################################
+# sorin.zsh-theme
+# screenshot: http://i.imgur.com/aipDQ.png
 
-############################
-# Variables                #
-############################
+ICON_HOME=" "
+ICON_GIT="" #  
+ICON_GIT_DIRTY=""
+ICON_GIT_ADDED=""
+ICON_GIT_MODIFIED=""
+ICON_GIT_DELETED=""
+ICON_GIT_RENAMED=""
+ICON_GIT_UNMERGED=""
+ICON_GIT_UNTRACKED=""
+USE_COLORS="true"
 
-# Icons
-FA_I_GIT=" "
-FA_I_UNSTAGED=""
-FA_I_STAGED=""
-
-FA_I_CLCK=""
-FA_I_WIFI=""
-FA_I_ETH0=""
-FA_I_DSCD=""
-FA_I_HOME=""
-FA_I_ACTV=""
-FA_I_FAIL=""
-FA_I_ROOT="" # 
-FA_I_NODE=""
-FA_I_GRPH=""
-FA_I_SPED=""
-
-FA_I_OTBD=""
-FA_I_INBD=""
-FA_I_CAL=""
-
-ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE="↓"
-ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE="↑"
-ZSH_THEME_GIT_PROMPT_DIVERGED_REMOTE="⇅"
-
-# Formatting
-TXT_BOLD="\e[1m"
-TXT_UNBOLD="\e[21m"
-
-############################
-# Prompt Segments          #
-############################
-
-CURRENT_BG='NONE'
-SEGMENT_SEPARATOR='' # 
-
-prompt_break() {
-  echo -n "\n"
-}
-# Begin a segment
-# Takes two arguments, background and foreground. Both can be omitted,
-# rendering default background/foreground.
-prompt_segment() {
-  local bg fg
-  [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
-  [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
-  if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
-    echo -n "%{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%}"
+function set_vars() {
+  if [[ "$USE_COLORS" == "true" ]]; then
+    ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[blue]%}$ICON_GIT%{$fg_bold[blue]%}  "
+    ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
+    ZSH_THEME_GIT_PROMPT_DIRTY=""
+    ZSH_THEME_GIT_PROMPT_CLEAN=""
+    ZSH_THEME_GIT_PROMPT_ADDED=" %{$fg[green]%}$ICON_GIT_ADDED%{$reset_color%}"
+    ZSH_THEME_GIT_PROMPT_MODIFIED=" %{$fg[blue]%}$ICON_GIT_MODIFIED%{$reset_color%}"
+    ZSH_THEME_GIT_PROMPT_DELETED=" %{$fg[red]%}$ICON_GIT_DELETED%{$reset_color%}"
+    ZSH_THEME_GIT_PROMPT_RENAMED=" %{$fg[magenta]%}$ICON_GIT_RENAMED%{$reset_color%}"
+    ZSH_THEME_GIT_PROMPT_UNMERGED=" %{$fg[cyan]%}$ICON_GIT_UNMERGED%{$reset_color%}"
+    ZSH_THEME_GIT_PROMPT_UNTRACKED=" %{$fg[yellow]%}$ICON_GIT_UNTRACKED%{$reset_color%}"
+    ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE="  "
+    ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE="  "
+    ZSH_THEME_GIT_PROMPT_DIVERGED_REMOTE="  "
   else
-    echo -n "%{$bg%}%{$fg%}"
+    ZSH_THEME_GIT_PROMPT_PREFIX="$ICON_GIT  "
+    ZSH_THEME_GIT_PROMPT_SUFFIX=" "
+    ZSH_THEME_GIT_PROMPT_DIRTY=""
+    ZSH_THEME_GIT_PROMPT_CLEAN=""
+    ZSH_THEME_GIT_PROMPT_ADDED=" $ICON_GIT_ADDED"
+    ZSH_THEME_GIT_PROMPT_MODIFIED=" $ICON_GIT_MODIFIED"
+    ZSH_THEME_GIT_PROMPT_DELETED=" $ICON_GIT_DELETED"
+    ZSH_THEME_GIT_PROMPT_RENAMED=" $ICON_GIT_RENAMED"
+    ZSH_THEME_GIT_PROMPT_UNMERGED=" $ICON_GIT_UNMERGED"
+    ZSH_THEME_GIT_PROMPT_UNTRACKED=" $ICON_GIT_UNTRACKED"
+    ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE="AHEAD "
+    ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE="BEHIND "
+    ZSH_THEME_GIT_PROMPT_DIVERGED_REMOTE="DIVERGED "
   fi
-  CURRENT_BG=$1
-  [[ -n $3 ]] && echo -n $3
 }
 
-key_val() {
-  [[ -n $3 ]] && echo -n "$1 ${TXT_BOLD}$2${TXT_UNBOLD}" || echo -n "$1 $2"
-}
-
-############################
-# Functions                #
-############################
-
-prompt_status() {
-  prompt_segment black red "%(1?; $FA_I_FAIL  ;)"
-}
-
-prompt_time() {
-  prompt_segment blue white "$FA_I_CLCK %*% "
-}
-
-# Dir: current working directory
-prompt_dir() {
-  prompt_segment black white " ${PWD/#$HOME/$FA_I_HOME }% "
-}
-
-prompt_ip() {
-  ip="$(hostname -I)"
-  eth0="$(ifconfig | grep eth0)"
-
-  prompt_segment cyan black
-  if [[ $ip > /dev/null ]]; then
-    if [[ -n $eth0 ]]; then
-      key_val $FA_I_ETH0 $ip
-    else
-      key_val $FA_I_WIFI $ip
-    fi
+function prompt_user() {
+  if [[ "$USE_COLORS" == "true" ]]; then
+    local USER_COLOR="%(!.%{$fg_bold[red]%}.%{$fg_bold[magenta]%})"
+    echo "$USER_COLOR`whoami`%{$reset_color%}"
   else
-    echo -n "$FA_I_DSCD"
+    echo "`whoami`"
   fi
 }
 
-prompt_nodeversion() {
-  version=$(node -v 2>/dev/null)
-  prompt_segment red black
-  key_val $FA_I_NODE $version
-}
-
-prompt_stats() {
-  if [[ -n $3 ]]; then
-    cpu_load_avg=$(uptime | awk '{print $(NF-2),$(NF-1),$NF}' | tr -d ',')
-  elif [[ -n $2 ]]; then
-    cpu_load_avg=$(uptime | awk '{print $(NF-2),$(NF-1)}' | tr -d ',')
+function prompt_host() {
+  if [[ "$USE_COLORS" == "true" ]]; then
+    echo "%{$fg_bold[yellow]%}%m%{$reset_color%}"
   else
-    cpu_load_avg=$(uptime | awk '{print $(NF-2)}' | tr -d ',')
-  fi
-  mem_used=$(free -h | grep Mem: | awk '{print $3}')
-  prompt_segment blue black
-  key_val $FA_I_GRPH "$cpu_load_avg "
-  key_val $FA_I_SPED $mem_used
-}
-
-# Git: branch/detached head, dirty status
-prompt_git() {
-  local ref dirty
-  if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    dirty=$(parse_git_dirty)
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
-    if [[ -n $dirty ]]; then
-      prompt_segment black red
-    else
-      gstatus=$(git_remote_status)
-      if [[ "$gstatus" == "" ]]; then
-        prompt_segment black green
-      else
-        prompt_segment black yellow
-      fi
-    fi
-
-    setopt promptsubst
-    autoload -Uz vcs_info
-
-    zstyle ':vcs_info:*' enable git
-    zstyle ':vcs_info:*' get-revision true
-    zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:*' stagedstr $FA_I_STAGED
-    zstyle ':vcs_info:git:*' unstagedstr $FA_I_UNSTAGED
-    zstyle ':vcs_info:*' formats ' %u%c'
-    zstyle ':vcs_info:*' actionformats ' %u%c'
-    vcs_info
-    echo -n " ${ref/refs\/heads\//$FA_I_GIT }${vcs_info_msg_0_%% } "
-    # key_val ${ref/refs\/heads\//$FA_I_GIT } ${vcs_info_msg_0_%% }
-
-    gstatus=$(git_remote_status)
-    if [[ "$gstatus" == "$ZSH_THEME_GIT_PROMPT_BEHIND_REMOTE" ]]; then
-      prompt_segment black red
-    else
-      if [[ "$gstatus" == "$ZSH_THEME_GIT_PROMPT_AHEAD_REMOTE" ]]; then
-        prompt_segment black green
-      else
-        prompt_segment black yellow
-      fi
-    fi
-    echo -n "%B$gstatus%b"
+    echo "%m"
   fi
 }
 
-# Context: user@hostname (who am I and where am I)
-prompt_context() {
-  local user=`whoami`
-
-  if [[ $UID -eq 0 ]]; then
-    prompt_segment black yellow
-    echo -n "$FA_I_ROOT $user@%m"
-  elif [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black magenta
-    echo -n "$user@%m"
-  fi
-}
-
-# End the prompt, closing any open segments
-prompt_end() {
-  if [[ -n $CURRENT_BG ]]; then
-    echo -n " %{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
+function prompt_pwd() {
+  if [[ "$USE_COLORS" == "true" ]]; then
+    echo "%{$fg[green]%}${PWD/$HOME/$ICON_HOME}%{$reset_color%}"
   else
-    echo -n "%{%k%}"
+    echo "${PWD/$HOME/$ICON_HOME}"
   fi
-  echo -n "%{%f%}"
-  CURRENT_BG=''
 }
 
-# Setup for user input
-prompt_cmd() {
-  echo -n "$ "
+function prompt_git() {
+  echo "$(git_prompt_info)$(git_remote_status)"
 }
 
-############################
-# Build the Prompt         #
-############################
-# The prompt is responsive, to customise change 
-# the variable below or enable modules in sml/lrg 
-# respectively
+function prompt_shell() {
+  if [[ "$USE_COLORS" == "true" ]]; then
+    echo "%(!.%{$fg_bold[red]%}#.%{$fg_bold[green]%}$)%{$reset_color%}"
+  else
+    echo "%(!.#.$)"
+  fi
+}
+
 build_prompt() {
-  if [[ ${COLUMNS} -gt 90 ]]; then
-    build_lrg_prompt
-  else
-    build_sml_prompt
-  fi
-}
-build_lrg_prompt() {
-  #prompt_user
-  prompt_status
-  prompt_context
-  prompt_dir
-  #prompt_stats 1 5 10
-  #prompt_time
-  #prompt_ip
-  #prompt_nodeversion
-  prompt_git
-  prompt_end
-  prompt_break
-  prompt_cmd
+
+  local return_status="%{$fg[red]%}%(?..⏎)%{$reset_color%}"
+
+  PROMPT='$(prompt_user) at $(prompt_host) in $(prompt_pwd) $(prompt_git)$(prompt_shell) '
+  RPROMPT='${return_status}$(git_prompt_status)%{$reset_color%}'
 }
 
-build_sml_prompt() {
-  build_lrg_prompt
-}
-
-PROMPT='$(build_prompt)'
+set_vars
+build_prompt
