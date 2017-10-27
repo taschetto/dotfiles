@@ -19,6 +19,13 @@
     ~/.vimrc:
       force: true
       path: vim/vimrc
+    ~/.hyper.js:
+      force: true
+      path: hyper/hyper.js
+    ~/.hyper_plugins:
+      force: true
+      path: hyper/hyper_plugins
+
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
