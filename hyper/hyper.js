@@ -116,7 +116,7 @@ module.exports = {
   //   `@company/project`
   //   `project#1.0.1`
   plugins: [
-    'hyper-snazzy',
+    'hyper-snazzy', "hypercwd", "hyperterm-visor", "hyperterm-summon", "hyperterm-alternatescroll", "hyperterm-tabs", "hyperterm-focus-reporting", "hyperlinks", "hyper-blink", "hyper-tab-icons", "hyperterm-cursor", "hyper-tabs-enhanced"
     //'hyper-material-theme'
   ],
 
