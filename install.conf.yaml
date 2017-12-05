@@ -25,7 +25,14 @@
     ~/.hyper_plugins:
       force: true
       path: hyper/hyper_plugins
-
+    ~/.zfunctions/prompt_pure_setup:
+      create: true
+      force: true
+      path: pure/pure.zsh
+    ~/.zfunctions/async:
+      create: true
+      force: true
+      path: pure/async.zsh
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]

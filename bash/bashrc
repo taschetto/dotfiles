@@ -177,6 +177,8 @@ if [ -d "$HOME/.rbenv/bin" ] ; then
   eval "$(rbenv init -)"
 fi
 
+export PATH="$HOME/.npm-global/bin:$PATH"
+
 source /usr/share/bash-completion/completions/git
 complete -o default -o nospace -F _git g
 
