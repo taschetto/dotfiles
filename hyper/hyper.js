@@ -21,7 +21,7 @@ module.exports = {
     cursorShape: 'BLOCK',
 
     // set to true for blinking cursor
-    cursorBlink: false,
+    cursorBlink: true,
 
     // color of the text
     foregroundColor: '#fff',
@@ -97,7 +97,7 @@ module.exports = {
     bell: 'SOUND',
 
     // if true, selected text will automatically be copied to the clipboard
-    copyOnSelect: false
+    copyOnSelect: false,
 
     // if true, on right click selected text will be copied or pasted if no
     // selection is present (true by default on Windows)
@@ -107,6 +107,12 @@ module.exports = {
     // bellSoundURL: 'http://example.com/bell.mp3',
 
     // for advanced config flags please refer to https://hyper.is/#cfg
+    hyperTabs: {
+      trafficButtons: true,
+      border: false,
+      tabIcons: true,
+      tabIconsColored: true,
+    }
   },
 
   // a list of plugins to fetch and install from npm
@@ -116,8 +122,13 @@ module.exports = {
   //   `@company/project`
   //   `project#1.0.1`
   plugins: [
-    'hyper-snazzy', "hypercwd", "hyperterm-visor", "hyperterm-summon", "hyperterm-alternatescroll", "hyperterm-tabs", "hyperterm-focus-reporting", "hyperlinks", "hyper-blink", "hyper-tab-icons", "hyperterm-cursor", "hyper-tabs-enhanced"
-    //'hyper-material-theme'
+    'hyper-snazzy',
+    // "hyper-chesterish",
+    "hypercwd",
+    "hyperterm-alternatescroll",
+    "hyperlinks",
+    "hyper-statusline",
+    "hyper-tabs-enhanced"
   ],
 
   // in development, you can create a directory under
