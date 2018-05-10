@@ -20,6 +20,7 @@
   log = diff-highlight | less
   show = diff-highlight | less
   diff = diff-highlight | less
+	branch = false
 [color "branch"]
 	current = red
 	local = yellow
