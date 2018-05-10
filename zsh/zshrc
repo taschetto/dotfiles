@@ -7,6 +7,7 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # Aliases
 alias open="xdg-open"
 alias ips="ip -s -c -h a"
+alias gpo="git push origin"
 
 # Open new tab in current directory
 [[ -f /etc/profile.d/vte.sh ]] && . /etc/profile.d/vte.sh
@@ -19,6 +20,7 @@ export PATH=/opt/cmake/bin:$PATH
 export PATH=$HOME/.rbenv/bin:$PATH
 export PATH=$HOME/.rbenv/plugins/ruby-build/bin:$PATH
 export PATH=$HOME/.npm-global/bin:$PATH
+export PATH=$HOME/.config/yarn/global/node_modules/.bin:$PATH
 
 # rbenv
 if [ -d $HOME/.rbenv/bin ] ; then
@@ -28,7 +30,7 @@ fi
 # zsh / oh-my-zsh
 export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=""
-ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="false"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd/mm/yyyy"
 
