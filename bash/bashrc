@@ -188,3 +188,7 @@ export STARWEB_USER="admin"
 export STARWEB_PASSWORD="star$TK#web"
 export WINEDEBUG=fixme-all
 export WINEDEBUG=fixme-all
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

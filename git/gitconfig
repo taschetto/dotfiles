@@ -38,10 +38,29 @@
   pages = less -FRSX
   whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
 [alias]
-	st = status
+	branches = branch -a
+	remotes = remote -v
+	au = update-index --assume-unchanged
+	nau = update-index --no-assume-unchanged
+	un = ls-files -v | grep '^[[:lower]]'
+	sw = switch
 	ci = commit
+	st = status
 	co = checkout
 	br = branch
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 [push]
-	default = matching
+	default = current
+[commit]
+  gpgsign = true
+[gpg]
+  program = gpg2
+[pull]
+  ff = only
+  default = all
+[rerere]
+  enabled = true
+[branch]
+  autosetuprebase = always
+[branch "develop"]
+  rebase = true

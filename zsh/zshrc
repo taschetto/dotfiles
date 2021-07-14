@@ -8,6 +8,8 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 alias open="xdg-open"
 alias ips="ip -s -c -h a"
 alias gpo="git push origin"
+alias dc="docker-compose"
+alias gun=""
 
 # Open new tab in current directory
 [[ -f /etc/profile.d/vte.sh ]] && . /etc/profile.d/vte.sh
@@ -39,6 +41,13 @@ plugins=(bundler common-aliases git github rails rake-fast sublime sudo zsh-synt
 source $ZSH/oh-my-zsh.sh
 
 # pure-prompt
-fpath=( "$HOME/.zfunctions" $fpath )
+fpath+=$HOME/.zsh/pure
 autoload -U promptinit; promptinit
 prompt pure
+
+autoload -U compinit
+compinit -i
+
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
