@@ -10,6 +10,7 @@ alias ips="ip -s -c -h a"
 alias gpo="git push origin"
 alias dc="docker-compose"
 alias gun=""
+alias lsd="ls -ltr"
 
 # Open new tab in current directory
 [[ -f /etc/profile.d/vte.sh ]] && . /etc/profile.d/vte.sh
@@ -36,7 +37,7 @@ ENABLE_CORRECTION="false"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd/mm/yyyy"
 
-plugins=(bundler common-aliases git github rails rake-fast sublime sudo zsh-syntax-highlighting)
+plugins=(bundler common-aliases git github rails rake-fast sublime sudo zsh-syntax-highlighting zsh-better-npm-completion yarn-autocompletions)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -50,4 +51,31 @@ compinit -i
 
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+# tatango aws
+#Get ips of instances by name
+
+function awip {
+    aws ec2 describe-instances --filters "Name=tag:Name,Values=$1"  --query 'Reservations[].Instances[].PrivateIpAddress' --output json | jq -r '.[]'
+}     
+
+function awssh {
+    ssh `awip $1 | head -n 1`
+}      
+
+function awrefresh {
+    awip $1 | while read -r line; do
+        ssh -n $line "sudo reboot"
+        sleep 3m
+    done
+}
+function awcount {                                                                                                                                                                          
+    aws ec2 describe-instances --filters "Name=tag:Name,Values=$1" "Name=instance-state-name,Values=running" --query 'Reservations[].Instances[].[InstanceId]' --output text | wc -l
+}
+function awlist {
+    aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" --query 'Reservations[].Instances[].[InstanceId,PrivateIpAddress,Tags[?Key==`Name`]| [0].Value]' --output table
+}
+function awsearch {
+    aws ec2 describe-instances --filters "Name=tag:Name,Values=*$1*" "Name=instance-state-name,Values=running" --query 'Reservations[].Instances[].[InstanceId,PrivateIpAddress,Tags[?Key==`Name`]| [0].Value]' --output table
+}
 

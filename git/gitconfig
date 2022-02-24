@@ -16,20 +16,18 @@
   interactive = auto
 	ui = true
   pager = true
-[pager]
-  log = diff-highlight | less
-  show = diff-highlight | less
-  diff = diff-highlight | less
-	branch = false
 [color "branch"]
 	current = red
 	local = yellow
 	remote = green
 [color "diff"]
-	meta = cyan
-	frag = magenta
+	meta = 11
+	frag = magenta bold
 	old = red bold
 	new = green bold
+	func = 146 bold
+	commit = yellow bold
+	whitespace = red reverse
 [color "status"]
 	added = green
 	changed = yellow
@@ -37,6 +35,7 @@
 [core]
   pages = less -FRSX
   whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+	pager = diff-so-fancy | less --tabs=4 -RFX
 [alias]
 	branches = branch -a
 	remotes = remote -v
@@ -64,3 +63,10 @@
   autosetuprebase = always
 [branch "develop"]
   rebase = true
+[interactive]
+	diffFilter = diff-so-fancy --patch
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
