@@ -1,6 +1,7 @@
 [user]
 	name = Guilherme Taschetto
 	email = gtaschetto@gmail.com
+	signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCt/q05RMiNyk+3yYwaAMTxbpUilI901lCDnQI+oYETmae65BI9aRKf3f5MsGGgiKgUzJeHDZQISakCWrpQ73YdO59ulhMn7vIjxU8KKian/rLrIwH4jXYLa/0q1P6NFs/Qvt5dYHCKSZ4GXlc6drQWbmIFSEQB3Gd/iyXgqvjvl9Xm094ckkLirrnIxvyWt4WAYJElr0pxHwbpwMPZSKYOnorUtV7QeiDX31IWMTFDSfwTGXafWk9i9d6GwIQQ+Olo0FOgYD8HZO5bn9brY72OHNwqq449QaLaHlH5jMOVX33nEWmfZSKTJvgo1oCtM8aQeE8kKTDlSCWbwdAzeKStLU0LTJnBajOYSPsbydbXBuckfqI7kbveUoAXWybuvP+b4R9OdEFeJJQYa1n6kWaeAWowfK6MWKMK8r4hSD/MvgC3Xn8wzd7su1CIT8CCknkMBtHgvAAGwaa7QaGoCdm13eorCvfDik3B7cRTPDVBPI/vb5uAUVUekUvLJ8RgFXBvk56clNdimbolOijK8/OE3mPuuA5qEPyN/+Clw7HPIX2u9IJgpvja4LqYJVZxenFjjQAdVV7lEsiS9Pg9l0fZvgmMcyXcbZgIeDO/cOsxB338najXTdCsW/mNaGdlIwhTt9wI/ULMsZy7ih4wpnyy7BZ9iIEOO0d5NF0k9f2Rcw== gtaschetto@gmail.com
 [credential]
 	helper = cache --timeout=86400
 [diff]
@@ -54,6 +55,7 @@
   gpgsign = true
 [gpg]
   program = gpg2
+	format = ssh
 [pull]
   ff = only
   default = all
