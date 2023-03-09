@@ -23,7 +23,6 @@ set softtabstop=2
 " Colors and stuff
 set clipboard=unnamedplus
 syntax enable
-colorscheme dracula
 
 " Shift+Tab for command move
 nmap <S-Tab> <<
@@ -32,8 +31,8 @@ imap <S-Tab> <Esc><<i
 
 " gvim Settings
 if has('gui_running')
-  if fontdetect#hasFontFamily("Inconsolata")
-    set guifont=Inconsolata\ Medium\ 12
+  if fontdetect#hasFontFamily("Monolisa")
+    set guifont=Monolisa\ 12
   endif
   set go-=T
   set go-=l

@@ -1,38 +1,15 @@
-- clean: ['~']
+- clean: ["~"]
 
 - link:
     ~/.gitconfig:
       force: true
       path: git/gitconfig
-    ~/.bashrc:
-      force: true
-      path: bash/bashrc
     ~/.zshrc:
       force: true
       path: zsh/zshrc
-    ~/.oh-my-zsh/themes/taschetto.zsh-theme:
-      force: true
-      path: zsh/themes/taschetto.zsh-theme
-    ~/.vim:
-      force: true
-      path: vim/
     ~/.vimrc:
       force: true
       path: vim/vimrc
-    ~/.hyper.js:
-      force: true
-      path: hyper/hyper.js
-    ~/.hyper_plugins:
-      force: true
-      path: hyper/hyper_plugins
-    ~/.zfunctions/prompt_pure_setup:
-      create: true
-      force: true
-      path: pure/pure.zsh
-    ~/.zfunctions/async:
-      create: true
-      force: true
-      path: pure/async.zsh
 
 - shell:
-  - [git submodule update --init --recursive, Installing submodules]
+    - [git submodule update --init --recursive, Installing submodules]
