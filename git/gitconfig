@@ -65,7 +65,7 @@
   ff = only
   default = all
 [rerere]
-  enabled = true
+	enabled = false
 [branch]
   autosetuprebase = always
 [branch "develop"]
