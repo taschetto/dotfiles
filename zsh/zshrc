@@ -32,8 +32,10 @@ export LESS="${less_opts[*]}"
 
 # Add custom bin to $PATH
 _extend_path "/opt/cmake/bin"
+_extend_path "/opt/homebrew/opt/libpq/bin"
 _extend_path "/usr/local/bin"
 _extend_path "/usr/local/heroku/bin"
+_extend_path "/usr/local/opt/libpq/bin"
 _extend_path "$HOME/.config/yarn/global/node_modules/.bin"
 _extend_path "$HOME/.npm-global/bin"
 _extend_path "$HOME/.pyenv/bin"
@@ -127,3 +129,14 @@ source /opt/homebrew/opt/spaceship/spaceship.zsh
 
 source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
 antidote load
+
+ZSH_PLUGINS_FILE="${HOME}/.zsh_plugins.txt"
+ZSH_PLUGINS_COMPILED="${HOME}/.zsh_plugins.zsh"
+
+if [[ ! -f $ZSH_PLUGINS_COMPILED || $ZSH_PLUGINS_FILE -nt $ZSH_PLUGINS_COMPILED ]]; then
+  antidote bundle <$ZSH_PLUGINS_FILE >$ZSH_PLUGINS_COMPILED
+fi
+
+source $ZSH_PLUGINS_COMPILED
+
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local

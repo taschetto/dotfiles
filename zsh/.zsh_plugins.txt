@@ -1,0 +1,11 @@
+ohmyzsh/ohmyzsh path:lib
+ohmyzsh/ohmyzsh path:plugins/git
+
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-completions
+zsh-users/zsh-syntax-highlighting
+
+MichaelAquilina/zsh-you-should-use
+fdellwing/zsh-bat
+unixorn/git-extra-commands
+hlissner/zsh-autopair
