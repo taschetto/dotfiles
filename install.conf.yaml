@@ -1,6 +1,9 @@
 - clean: ["~"]
 
 - link:
+    ~/.claude:
+      force: true
+      path: claude
     ~/.gitconfig:
       force: true
       path: git/gitconfig

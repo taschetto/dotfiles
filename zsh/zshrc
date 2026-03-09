@@ -2,6 +2,7 @@
 export EDITOR='vim'
 export TERM=xterm-256color
 export SSH_KEY_PATH="~/.ssh/rsa_id"
+export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 
 # Extend $PATH without duplicates
 _extend_path() {
@@ -79,6 +80,11 @@ load-nvmrc() {
   fi
 }
 
+# OpenSSL 3.5 configuration (fixes SSL issues with OpenSSL 3.6.0)
+# export LDFLAGS="-L/opt/homebrew/opt/openssl@3.5/lib"
+# export CPPFLAGS="-I/opt/homebrew/opt/openssl@3.5/include"
+# export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3.5/lib/pkgconfig"
+
 eval "$(pyenv init --path)"
 eval "$(rbenv init - zsh)"
 
@@ -140,3 +146,68 @@ fi
 source $ZSH_PLUGINS_COMPILED
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+
+# Canix dev helper: start backend, frontend, and sidekiq in tmux
+function canix-dev() {
+  local root="/Users/taschetto/projects/canix/entrc-backend"
+  local backend_dir="$root/backend"
+  local frontend_dir="$root/web"
+  local session="canix"
+
+  if ! command -v tmux >/dev/null 2>&1; then
+    echo "tmux is required. Install with: brew install tmux"
+    return 1
+  fi
+
+  if [[ ! -d "$backend_dir" || ! -d "$frontend_dir" ]]; then
+    echo "Expected directories not found under $root"
+    return 1
+  fi
+
+  # Kill existing session to ensure fresh start
+  tmux kill-session -t "$session" 2>/dev/null
+
+  # Create session with first pane (backend)
+  tmux new-session -d -s "$session" -n dev -c "$backend_dir"
+
+  # Split horizontally for frontend pane
+  tmux split-window -h -t "$session:dev" -c "$frontend_dir"
+
+  # Split the first pane vertically for sidekiq
+  tmux split-window -v -t "$session:dev.0" -c "$backend_dir"
+
+  # Arrange panes vertically (stacked)
+  tmux select-layout -t "$session:dev" even-vertical
+
+  # Send commands to each pane
+  tmux send-keys -t "$session:dev.0" 'kill -9 $(lsof -ti :3000) 2>/dev/null; bundle exec rails s' C-m
+  tmux send-keys -t "$session:dev.1" 'bundle exec sidekiq -C config/sidekiq.dev.yml' C-m
+  tmux send-keys -t "$session:dev.2" 'yarn start:local' C-m
+
+  # Focus on backend pane and attach
+  tmux select-pane -t "$session:dev.0"
+  tmux attach -t "$session"
+}
+
+# alias canix='canix-dev'
+alias canix-stop='tmux kill-session -t canix'
+
+# https://github.com/ruby/openssl/issues/949#issuecomment-3394091087
+export LDFLAGS="-L/opt/homebrew/opt/openssl@3.5/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/openssl@3.5/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3.5/lib/pkgconfig"
+
+# export RUBYOPT="-r$HOME/.rubyopenssl_default_store.rb $RUBYOPT"
+
+# pg_dump() {
+#   local root
+#   root="$(command git rev-parse --show-toplevel 2>/dev/null)" || root=""
+#   if [[ -x "./bin/pg_dump" ]]; then
+#     command ./bin/pg_dump "$@"
+#   elif [[ -n "$root" && -x "$root/bin/pg_dump" ]]; then
+#     command "$root/bin/pg_dump" "$@"
+#   else
+#     command pg_dump "$@"
+#   fi
+# }
