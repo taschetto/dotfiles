@@ -1,8 +1,6 @@
 {
   "permissions": {
     "allow": [
-      "Read(//Users/taschetto/.claude/**)",
-      "Read(//Users/taschetto/projects/canix/entrc-backend/**)",
       "mcp__claude_ai_Linear__get_issue",
       "mcp__claude_ai_Linear__list_comments",
       "mcp__claude_ai_Linear__list_issues",
