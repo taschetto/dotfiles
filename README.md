@@ -1,6 +1,6 @@
 #dotfiles
 
-My dotfiles and a install Makefile.
+My dotfiles and a install script.
 
 Includes:
 
@@ -13,5 +13,5 @@ Includes:
 ## Install
     git clone https://github.com/taschetto/dotfiles.git
     cd dotfiles/
-    make
+    ./install
     
