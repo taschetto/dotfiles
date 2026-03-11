@@ -1,6 +1,10 @@
 {
   "permissions": {
     "allow": [
+      "Read(//Users/taschetto/.claude/**)",
+      "Read(//Users/taschetto/projects/canix/entrc-backend/**)",
+      "Bash(gh pr:*)",
+      "Bash(gh api:*)",
       "mcp__claude_ai_Linear__get_issue",
       "mcp__claude_ai_Linear__list_comments",
       "mcp__claude_ai_Linear__list_issues",
@@ -14,6 +18,9 @@
       "mcp__github__pull_request_read",
       "mcp__github__list_commits",
       "mcp__github__get_file_contents",
+      "mcp__github__get_pull_request",
+      "mcp__github__get_pull_request_comments",
+      "mcp__github__get_pull_request_files",
       "mcp__github__get_pull_request_reviews",
       "mcp__github__list_issues",
       "mcp__github__issue_read",
@@ -25,5 +32,16 @@
       "Bash(python3 *parse_prs.py*)",
       "mcp__claude_ai_Slack__slack_send_message"
     ]
+  },
+  "extraKnownMarketplaces": {
+    "chrome-devtools-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "ChromeDevTools/chrome-devtools-mcp"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "chrome-devtools-mcp@chrome-devtools-plugins": true
   }
 }

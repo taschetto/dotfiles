@@ -3,6 +3,7 @@ export EDITOR='vim'
 export TERM=xterm-256color
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+export CANIX_MONOREPO_ROOT="$HOME/projects/canix/entrc-backend"
 
 # Extend $PATH without duplicates
 _extend_path() {
@@ -42,6 +43,7 @@ _extend_path "$HOME/.npm-global/bin"
 _extend_path "$HOME/.pyenv/bin"
 _extend_path "$HOME/bin"
 _extend_path "$HOME/Library/Python/3.9/bin"
+_extend_path "$CANIX_MONOREPO_ROOT/backend/bin"
 
 # begin docker utilities
 function dc() {
@@ -51,9 +53,6 @@ function dc() {
     docker-compose "$@"
   fi
 }
-
-alias dcr='dc run --rm'
-alias drs='dcr tatango-web bundle exec rspec'
 # end docker utilities
 
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
@@ -79,11 +78,6 @@ load-nvmrc() {
     nvm use default
   fi
 }
-
-# OpenSSL 3.5 configuration (fixes SSL issues with OpenSSL 3.6.0)
-# export LDFLAGS="-L/opt/homebrew/opt/openssl@3.5/lib"
-# export CPPFLAGS="-I/opt/homebrew/opt/openssl@3.5/include"
-# export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3.5/lib/pkgconfig"
 
 eval "$(pyenv init --path)"
 eval "$(rbenv init - zsh)"
@@ -197,17 +191,3 @@ alias canix-stop='tmux kill-session -t canix'
 export LDFLAGS="-L/opt/homebrew/opt/openssl@3.5/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/openssl@3.5/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3.5/lib/pkgconfig"
-
-# export RUBYOPT="-r$HOME/.rubyopenssl_default_store.rb $RUBYOPT"
-
-# pg_dump() {
-#   local root
-#   root="$(command git rev-parse --show-toplevel 2>/dev/null)" || root=""
-#   if [[ -x "./bin/pg_dump" ]]; then
-#     command ./bin/pg_dump "$@"
-#   elif [[ -n "$root" && -x "$root/bin/pg_dump" ]]; then
-#     command "$root/bin/pg_dump" "$@"
-#   else
-#     command pg_dump "$@"
-#   fi
-# }
