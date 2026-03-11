@@ -32,11 +32,12 @@
       "mcp__github__search_pull_requests",
       "mcp__github__update_pull_request_branch",
       "Read(//Users/taschetto/.claude/**)",
-      "Read(//Users/taschetto/projects/canix/entrc-backend/**)"
+      "Read(//Users/taschetto/projects/canix/entrc-backend/**)",
+      "Read(//Users/taschetto/projects/dotfiles/**)",
+      "mcp__github__get_pull_request_status",
+      "Bash(gh search:*)"
     ],
-    "additionalDirectories": [
-      "/Users/taschetto/projects/canix/entrc-backend/.github/workflows"
-    ]
+    "additionalDirectories": []
   },
   "enabledPlugins": {
     "chrome-devtools-mcp@chrome-devtools-plugins": true

@@ -8,31 +8,9 @@ Generate my standup update.
 
 ## Step 0 — Verify required MCP tools are available
 
-Before doing ANY work, you MUST use `ToolSearch` to discover and load the required MCP tools. This skill depends on three MCP servers:
+Use `ToolSearch` to discover and load tools from these three MCP servers: **Linear**, **GitHub**, **Slack**. If any server has zero tools discovered, halt immediately and report which server(s) are missing so the user can fix their MCP configuration.
 
-1. **Linear** — Search for tools matching `linear` (e.g., `mcp__claude_ai_Linear__search_issues`, `mcp__claude_ai_Linear__get_issue`, or similar).
-2. **GitHub** — Search for tools matching `github` (e.g., `mcp__github__search_pull_requests`, `mcp__github__list_pull_requests`, or similar).
-3. **Slack** — Search for tools matching `slack send message` (e.g., `mcp__claude_ai_Slack__slack_send_message`).
-
-Run these ToolSearch calls first. If ANY of the three MCP servers (Linear, GitHub, Slack) has ZERO tools discovered, you MUST immediately halt and report an error to the user:
-
-```
-ERROR: Required MCP server(s) not available in this session.
-
-Missing:
-- [list the missing server(s): Linear / GitHub / Slack]
-
-To fix this:
-1. Run `/mcp` and verify the missing server(s) show as "connected"
-2. If connected but tools aren't loading, try restarting the Claude Code session
-3. Ensure the MCP servers are configured for this project scope (check ~/.claude.json)
-```
-
-Do NOT fall back to CLI tools (e.g., `gh`), web fetching, Notion search, or any other workaround.
-Do NOT use the Bash tool to call `gh`, `curl`, or any other CLI as a substitute for MCP tools.
-Do NOT use WebFetch, WebSearch, or Notion search as a substitute for Linear or GitHub MCP tools.
-
-Only proceed to Step 1 once all three MCP servers have at least one usable tool loaded.
+Do NOT fall back to CLI tools, WebFetch, WebSearch, or any other workaround. The only exception is the `gh` CLI tool as a fallback for GitHub MCP.
 
 ## Step 1 — Determine the cutoff date/time
 
@@ -42,7 +20,7 @@ Only proceed to Step 1 once all three MCP servers have at least one usable tool 
   - Example: if today is Tuesday but Monday is a US holiday, use Friday 10:00 AM.
   - Example: if today is Monday, use Friday 10:00 AM (unless Friday is a holiday, then use Thursday, etc.).
 
-## Step 2 — Gather data (MCP tools ONLY)
+## Step 2 — Gather data
 
 1. **Find my Linear tickets**: Use the Linear MCP tools to search for issues assigned to me that had any status change (workflow state transition) since the cutoff. Also look for issues I completed, moved to review, started, blocked, etc.
 
@@ -50,7 +28,7 @@ Only proceed to Step 1 once all three MCP servers have at least one usable tool 
    - Find PRs authored by me updated since the cutoff in Canix repos (e.g., `entrc/entrc-backend`).
    - Extract ticket IDs (e.g., ENG-123, CNX-456) from branch names and PR titles.
    - For each PR, note its status (open, merged, draft, closed).
-   - **If the MCP response is too large and gets saved to a file**, use the helper script to parse it:
+   - If the MCP response is too large and gets saved to a file, use the helper script to parse it:
      ```
      python3 ~/.claude/skills/standup/parse_prs.py <saved-file-path> authored
      ```
@@ -58,7 +36,7 @@ Only proceed to Step 1 once all three MCP servers have at least one usable tool 
 3. **Check my code reviews**: Use the GitHub MCP tools to find PRs I reviewed since the cutoff:
    - Search for PRs reviewed by me updated since the cutoff.
    - Note which PRs I approved, requested changes on, committed to, or commented on.
-   - **If the MCP response is too large and gets saved to a file**, use the helper script to parse it:
+   - If the MCP response is too large and gets saved to a file, use the helper script to parse it:
      ```
      python3 ~/.claude/skills/standup/parse_prs.py <saved-file-path> reviewed
      ```
@@ -77,7 +55,7 @@ Only proceed to Step 1 once all three MCP servers have at least one usable tool 
 
 Send TWO separate Slack DMs to myself (user ID: U081LK77B0W) using the Slack MCP `send_message` tool. Use Slack mrkdwn syntax.
 
-**Message 1 — Status Report.** Group items by category. Format:
+**Message 1 — Status Report.** Group items by category in this order. Show transition groups first, then currently in progress, then code reviews:
 
 ```
 *Moved to Done*
@@ -93,6 +71,9 @@ Send TWO separate Slack DMs to myself (user ID: U081LK77B0W) using the Slack MCP
 - <https://linear.app/canix/issue/ENG-XXX|ENG-XXX> - <title>
 
 *Moved to Blocked*
+- <https://linear.app/canix/issue/ENG-XXX|ENG-XXX> - <title>
+
+*Currently In Progress*
 - <https://linear.app/canix/issue/ENG-XXX|ENG-XXX> - <title>
 
 *Code Reviews performed by me*
@@ -113,10 +94,10 @@ Note: Use `- ` (dash + space) for list items — do NOT use unicode bullets (•
 
 ## Rules
 
-- **MCP tools ONLY.** Never use Bash (`gh`, `curl`, etc.), WebFetch, WebSearch, or Notion search as a fallback. If an MCP tool call fails, report the error — do not retry with a different tool type.
+- **MCP tools only.** Do NOT use Bash (`gh`, `curl`, etc.), WebFetch, WebSearch, or Notion search. The only exception is the `gh` CLI as a fallback for GitHub MCP. If any other MCP tool call fails, report the error — do not retry with a different tool type.
 - Only include Canix-related work. Filter to the Canix team/project in Linear and Canix repos on GitHub. Ignore tickets, PRs, and reviews from other teams or projects.
 - Only include tickets with actual status changes since the cutoff.
-- Include a separate section for "Currently In Progress".
+- "Currently In Progress" includes tickets that are in the In Progress column but did NOT transition since the cutoff (i.e., they were already in progress before). Do not duplicate tickets that appear in the "Moved to In Progress" group.
 - If a ticket transitioned through multiple statuses, use the **latest** status.
 - Make the ticket ID (e.g., ENG-XXX) a Slack link to the Linear issue: `<https://linear.app/canix/issue/ENG-XXX|ENG-XXX>`. Do NOT append a separate link at the end.
 - For code reviews, link to the PR URL and note the review action (approved, changes requested, commented).
