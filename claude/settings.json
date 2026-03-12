@@ -1,10 +1,25 @@
 {
   "permissions": {
     "allow": [
+      "Bash(circleci api:*)",
+      "Bash(circleci diagnostic:*)",
+      "Bash(circleci version:*)",
+      "Bash(circleci workflow:*)",
+      "Bash(do echo:*)",
+      "Bash(done)",
+      "Bash(env)",
+      "Bash(for pr:*)",
       "Bash(gh api:*)",
       "Bash(gh pr:*)",
       "Bash(gh run:*)",
+      "Bash(gh search:*)",
+      "Bash(heroku run:*)",
+      "Bash(npx eslint:*)",
+      "Bash(python3 *approve_e2e.py*)",
       "Bash(python3 *parse_prs.py*)",
+      "Bash(yarn lint:*)",
+      "mcp__circleci-mcp-server__get_latest_pipeline_status",
+      "mcp__circleci-mcp-server__list_followed_projects",
       "mcp__claude_ai_Linear__get_issue_status",
       "mcp__claude_ai_Linear__get_issue",
       "mcp__claude_ai_Linear__get_user",
@@ -20,6 +35,7 @@
       "mcp__github__get_pull_request_comments",
       "mcp__github__get_pull_request_files",
       "mcp__github__get_pull_request_reviews",
+      "mcp__github__get_pull_request_status",
       "mcp__github__get_pull_request",
       "mcp__github__issue_read",
       "mcp__github__list_branches",
@@ -31,11 +47,10 @@
       "mcp__github__search_issues",
       "mcp__github__search_pull_requests",
       "mcp__github__update_pull_request_branch",
+      "Read(//Users/taschetto/.circleci/**)",
       "Read(//Users/taschetto/.claude/**)",
       "Read(//Users/taschetto/projects/canix/entrc-backend/**)",
-      "Read(//Users/taschetto/projects/dotfiles/**)",
-      "mcp__github__get_pull_request_status",
-      "Bash(gh search:*)"
+      "Read(//Users/taschetto/projects/dotfiles/**)"
     ],
     "additionalDirectories": []
   },
