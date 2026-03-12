@@ -14,7 +14,6 @@
       "Bash(gh run:*)",
       "Bash(gh search:*)",
       "Bash(heroku run:*)",
-      "Bash(npx eslint:*)",
       "Bash(python3 *approve_e2e.py*)",
       "Bash(python3 *parse_prs.py*)",
       "Bash(yarn lint:*)",
