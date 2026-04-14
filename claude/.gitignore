@@ -6,6 +6,7 @@ ide/
 paste-cache/
 plugins/
 projects/
+sessions/
 shell-snapshots/
 statsig/
 telemetry/

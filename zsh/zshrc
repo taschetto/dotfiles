@@ -5,15 +5,6 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 export CANIX_MONOREPO_ROOT="$HOME/projects/canix/entrc-backend"
 
-# Extend $PATH without duplicates
-_extend_path() {
-  [[ -d "$1" ]] || return
-
-  if ! $(echo "$PATH" | tr ":" "\n" | grep -qx "$1"); then
-    export PATH="$1:$PATH"
-  fi
-}
-
 # Default pager
 export PAGER='less'
 
@@ -32,32 +23,10 @@ less_opts=(
 )
 export LESS="${less_opts[*]}"
 
-# Add custom bin to $PATH
-_extend_path "/opt/cmake/bin"
-_extend_path "/opt/homebrew/opt/libpq/bin"
-_extend_path "/usr/local/bin"
-_extend_path "/usr/local/heroku/bin"
-_extend_path "/usr/local/opt/libpq/bin"
-_extend_path "$HOME/.config/yarn/global/node_modules/.bin"
-_extend_path "$HOME/.npm-global/bin"
-_extend_path "$HOME/.pyenv/bin"
-_extend_path "$HOME/bin"
-_extend_path "$HOME/Library/Python/3.9/bin"
-_extend_path "$CANIX_MONOREPO_ROOT/backend/bin"
 
-# begin docker utilities
-function dc() {
-  if [[ $(uname -m) == "arm64" && -f "docker-compose.override.apple-silicon.yml" ]]; then
-    docker-compose -f docker-compose.yml -f docker-compose.override.apple-silicon.yml "$@"
-  else
-    docker-compose "$@"
-  fi
-}
-# end docker utilities
-
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 load-nvmrc() {
   [[ -e .nvmrc ]] || return
@@ -141,10 +110,9 @@ source $ZSH_PLUGINS_COMPILED
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
-
 # Canix dev helper: start backend, frontend, and sidekiq in tmux
 function canix-dev() {
-  local root="/Users/taschetto/projects/canix/entrc-backend"
+  local root="$CANIX_MONOREPO_ROOT"
   local backend_dir="$root/backend"
   local frontend_dir="$root/web"
   local session="canix"
@@ -159,8 +127,25 @@ function canix-dev() {
     return 1
   fi
 
+  # Ensure Colima is running (Docker runtime)
+  if ! colima status &>/dev/null; then
+    echo "Starting Colima..."
+    colima start
+  fi
+
+  # Ensure docker-compose services (postgres, redis) are up
+  if ! docker compose -f "$root/docker-compose.yml" ps --status running --quiet 2>/dev/null | grep -q .; then
+    echo "Starting docker-compose services..."
+    docker compose -f "$root/docker-compose.yml" up -d
+  fi
+
   # Kill existing session to ensure fresh start
   tmux kill-session -t "$session" 2>/dev/null
+
+  # Kill any existing processes on the ports we need
+  kill -9 $(lsof -ti :3000) 2>/dev/null
+  kill -9 $(lsof -ti :3001) 2>/dev/null
+  pkill -f 'sidekiq.*config/sidekiq.dev.yml' 2>/dev/null
 
   # Create session with first pane (backend)
   tmux new-session -d -s "$session" -n dev -c "$backend_dir"
@@ -175,7 +160,7 @@ function canix-dev() {
   tmux select-layout -t "$session:dev" even-vertical
 
   # Send commands to each pane
-  tmux send-keys -t "$session:dev.0" 'kill -9 $(lsof -ti :3000) 2>/dev/null; bundle exec rails s' C-m
+  tmux send-keys -t "$session:dev.0" 'bundle exec rails s' C-m
   tmux send-keys -t "$session:dev.1" 'bundle exec sidekiq -C config/sidekiq.dev.yml' C-m
   tmux send-keys -t "$session:dev.2" 'yarn start:local' C-m
 
@@ -191,3 +176,28 @@ alias canix-stop='tmux kill-session -t canix'
 export LDFLAGS="-L/opt/homebrew/opt/openssl@3.5/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/openssl@3.5/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3.5/lib/pkgconfig"
+
+# Canix backend/bin must be prepended AFTER nvm/pyenv/rbenv/brew/antidote
+# so that its pg_dump takes priority over /opt/homebrew/bin/pg_dump.
+# Force-prepend (bypass _extend_path's duplicate guard).
+export PATH="$CANIX_MONOREPO_ROOT/backend/bin:$PATH"
+
+# Extend $PATH without duplicates
+_extend_path() {
+  [[ -d "$1" ]] || return
+  [[ ":$PATH:" == *":$1:"* ]] && return
+  export PATH="$1:$PATH"
+}
+
+# Add custom bin to $PATH
+_extend_path "/opt/cmake/bin"
+_extend_path "/opt/homebrew/opt/libpq/bin"
+_extend_path "/usr/local/bin"
+_extend_path "/usr/local/heroku/bin"
+_extend_path "/usr/local/opt/libpq/bin"
+_extend_path "$HOME/.config/yarn/global/node_modules/.bin"
+_extend_path "$HOME/.npm-global/bin"
+_extend_path "$HOME/.pyenv/bin"
+_extend_path "$HOME/bin"
+_extend_path "$HOME/.local/bin"
+_extend_path "$HOME/Library/Python/3.9/bin"
