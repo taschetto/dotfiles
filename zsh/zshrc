@@ -1,6 +1,5 @@
 # Random stuff
 export EDITOR='vim'
-export TERM=xterm-256color
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 export CANIX_MONOREPO_ROOT="$HOME/projects/canix/entrc-backend"
@@ -60,8 +59,8 @@ function load-aws-profile {
   while [[ -n "$dir" && $found -eq 0 ]]; do
     if [[ -f "$dir/.awsprofile" ]]; then
       new_profile=$(cat "$dir/.awsprofile")
-      new_region=$(aws configure get region --profile $new_profile)
       if [[ "$AWS_PROFILE" != "$new_profile" ]]; then
+        new_region=$(aws configure get region --profile $new_profile)
         export AWS_PROFILE=$new_profile
         export AWS_REGION=$new_region
         echo "Found '$dir/.awsprofile' with profile <$new_profile>"
@@ -84,7 +83,12 @@ function load-aws-profile {
 }
 
 autoload -Uz compinit
-compinit
+ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.zcompdump"
+if [[ "$ZSH_COMPDUMP"(#qNmh+24) ]]; then
+  compinit -d "$ZSH_COMPDUMP"
+else
+  compinit -C -d "$ZSH_COMPDUMP"
+fi
 
 autoload -U add-zsh-hook
 
@@ -96,8 +100,7 @@ load-aws-profile
 
 source /opt/homebrew/opt/spaceship/spaceship.zsh
 
-source $(brew --prefix)/opt/antidote/share/antidote/antidote.zsh
-antidote load
+source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
 
 ZSH_PLUGINS_FILE="${HOME}/.zsh_plugins.txt"
 ZSH_PLUGINS_COMPILED="${HOME}/.zsh_plugins.zsh"
@@ -177,17 +180,17 @@ export LDFLAGS="-L/opt/homebrew/opt/openssl@3.5/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/openssl@3.5/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3.5/lib/pkgconfig"
 
-# Canix backend/bin must be prepended AFTER nvm/pyenv/rbenv/brew/antidote
-# so that its pg_dump takes priority over /opt/homebrew/bin/pg_dump.
-# Force-prepend (bypass _extend_path's duplicate guard).
-export PATH="$CANIX_MONOREPO_ROOT/backend/bin:$PATH"
-
 # Extend $PATH without duplicates
 _extend_path() {
   [[ -d "$1" ]] || return
   [[ ":$PATH:" == *":$1:"* ]] && return
   export PATH="$1:$PATH"
 }
+
+# Canix backend/bin must be prepended AFTER nvm/pyenv/rbenv/brew/antidote
+# so that its pg_dump takes priority over /opt/homebrew/bin/pg_dump.
+# Force-prepend (bypass _extend_path's duplicate guard).
+export PATH="$CANIX_MONOREPO_ROOT/backend/bin:$PATH"
 
 # Add custom bin to $PATH
 _extend_path "/opt/cmake/bin"
@@ -200,4 +203,4 @@ _extend_path "$HOME/.npm-global/bin"
 _extend_path "$HOME/.pyenv/bin"
 _extend_path "$HOME/bin"
 _extend_path "$HOME/.local/bin"
-_extend_path "$HOME/Library/Python/3.9/bin"
+_extend_path "$HOME/.pyenv/shims"
